@@ -1,50 +1,56 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Web.Script.Serialization;
-using Npgsql;
-
-
 
 namespace LeitorCSV
 {
     public class Program
     {
-
         static void Main(string[] args)
         {
-            LerArquivoJson(@"c:\Projetos\DesafioJson\Desafio.json");
-
-        }
-        static void LerArquivoJson(string pathJson)
-        {
-            JavaScriptSerializer serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
-
-            using (StreamReader r = new StreamReader(pathJson))
+            try
             {
-                string json = r.ReadToEnd();
-                dynamic array = serializer.DeserializeObject(json);
+                var arquivos = ObterArquivos();
 
+                LeituraArquivoCSV(arquivos);
 
-                var conexao = new NpgsqlConnection("User ID=postgres;Password=123;Host=localhost;Port=5432;Database=Desafio;Pooling=true;");
-                Console.Write("Iniciado");
-
-                conexao.Open();
-
-                Console.WriteLine();
-                Console.WriteLine("");
-                Console.WriteLine(serializer.Serialize(array));
-                Console.WriteLine("");
-                Console.WriteLine();
-
-                conexao.Close();
             }
-            Console.Write("Execução Finalizada!");
+            catch (Exception ex)
+            {
+
+                Console.WriteLine(ex.Message);
+            }
+        }
+        private static IEnumerable<string> ObterArquivos()
+        {
+            var caminhoDaPasta = @"C:\Users\scandido\Desktop\Samara\facul\LBD\Eleicao\consulta_cand_2020";
+            var arquivos = Directory.EnumerateFiles(caminhoDaPasta, "*.csv");
+
+            return arquivos;
         }
 
+        public static void LeituraArquivoCSV(IEnumerable<string> arquivos )
+        {
+            bool cabecalhoLinha = true;
+            foreach (var arquivo in arquivos)
+            {               
+                using (var reader =  new StreamReader(arquivo))
+                {
+                    while (!reader.EndOfStream)
+                    {
+                        var linha = reader.ReadLine();
+                        var valores = linha.Split(';');
 
+                        if (cabecalhoLinha)
+                        {
+                            cabecalhoLinha = false;
+                            continue;
+                        }
+                    }
+
+                }
+            }
+        }
     }
-
-
 }
 
