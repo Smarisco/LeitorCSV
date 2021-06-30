@@ -1,5 +1,6 @@
 ﻿using LeitorCSV.Model;
 using LeitorCSV.Model.Bens;
+using LeitorCSV.Model.Vagas;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -31,7 +32,7 @@ namespace LeitorCSV
 
             return arquivos;
         }
-        
+
         public static List<Candidato> LeituraDados()
         {
             var arquivosCandidato = ObterArquivos(@"C:\Users\solpe\Desktop\LDB\consulta_cand_2020");
@@ -86,7 +87,7 @@ namespace LeitorCSV
                         candidato.DataNascimento = RegexString(valores[38]).ToString();
                         candidato.IdadePosse = Convert.ToInt32(RegexString(valores[39]));
                         candidato.TituloEleitor = Convert.ToInt64(RegexString(valores[40]));
-                        candidato.ValorMaxCampanha = Convert.ToDecimal(RegexString(valores[51]));
+                        candidato.ValorMaxCampanha = Convert.ToDecimal(RegexString(valores[51])); /// ver isso
                         candidato.Reeleicao = Convert.ToChar(RegexString(valores[54]).ToString());
                         candidato.DeclararBens = Convert.ToChar(RegexString(valores[55]));
 
@@ -94,7 +95,7 @@ namespace LeitorCSV
                         estado.Sigla = RegexString(valores[10]).ToString();
 
                         candidato.EstadoID = estado.Id;
-
+                        candidato.Estado = estado;
                         if (listaEstado.Exists(x => x.Sigla.Equals(estado.Sigla)) == false)
                         {
                             listaEstado.Add(estado);
@@ -107,6 +108,7 @@ namespace LeitorCSV
                         municipio.Estado = estado;
 
                         candidato.MunicipioID = municipio.Id;
+                        candidato.Municipio = municipio;
 
                         if (listaMunicipo.Exists(x => x.Id == municipio.Id) == false)
                         {
@@ -118,6 +120,7 @@ namespace LeitorCSV
                         cargo.Descricao = RegexString(valores[14]).ToString();
 
                         candidato.CargoID = cargo.Id;
+                        candidato.Cargo = cargo;
 
                         if (listaCargos.Exists(x => x.Id == cargo.Id) == false)
                         {
@@ -129,6 +132,7 @@ namespace LeitorCSV
                         situCandidatura.Descricao = RegexString(valores[23]).ToString();
 
                         candidato.SituacaoCandidaturaID = situCandidatura.Id;
+                        candidato.SituacaoCandidatura = situCandidatura;
 
                         if (listaSituCandidatura.Exists(x => x.Id == situCandidatura.Id) == false)
                         {
@@ -139,6 +143,7 @@ namespace LeitorCSV
                         detalhaSituacao.Id = Convert.ToInt32(RegexString(valores[24]));
                         detalhaSituacao.Descricao = RegexString(valores[25]).ToString();
                         candidato.SituacaoCandidaturaID = situCandidatura.Id;
+                        candidato.SituacaoCandidatura = situCandidatura;
 
                         if (listaDetalhaSituacao.Exists(x => x.Id == detalhaSituacao.Id) == false)
                         {
@@ -152,6 +157,7 @@ namespace LeitorCSV
                         partido.Nome = RegexString(valores[29]).ToString();
 
                         candidato.PartidoId = partido.Id;
+                        candidato.Partido = partido;
 
                         if (listaPartido.Exists(x => x.Id == partido.Id) == false)
                         {
@@ -164,6 +170,7 @@ namespace LeitorCSV
                         coligacao.Composicao = RegexString(valores[32]).ToString();
 
                         candidato.ColigacaoID = coligacao.Id;
+                        candidato.Coligacao = coligacao;
 
                         if (listaColigacao.Exists(x => x.Id == coligacao.Id) == false)
                         {
@@ -175,6 +182,7 @@ namespace LeitorCSV
                         nascionalidade.Descricao = RegexString(valores[34]).ToString();
 
                         candidato.NacionalidadeID = nascionalidade.Id;
+                        candidato.Nacionalidade = nascionalidade;
 
                         if (listaNascionalidade.Exists(x => x.Id == nascionalidade.Id) == false)
                         {
@@ -186,6 +194,7 @@ namespace LeitorCSV
                         genero.Descricao = RegexString(valores[42]).ToString();
 
                         candidato.GeneroID = genero.Id;
+                        candidato.Genero = genero;
 
                         if (listaGenero.Exists(x => x.Id == genero.Id))
                         {
@@ -197,6 +206,7 @@ namespace LeitorCSV
                         grauEnsino.Descricao = RegexString(valores[44]).ToString();
 
                         candidato.GrauInstrucaoID = grauEnsino.Id;
+                        candidato.GrauInstrucao = grauEnsino;
 
                         if (listaGrauEnsino.Exists(x => x.Id == grauEnsino.Id) == false)
                         {
@@ -208,6 +218,7 @@ namespace LeitorCSV
                         estadoCivil.Descricao = RegexString(valores[46]).ToString();
 
                         candidato.EstadoCivilID = estadoCivil.Id;
+                        candidato.EstadoCivil = estadoCivil;
 
                         if (listaEstadoCivil.Exists(x => x.Id == estadoCivil.Id) == false)
                         {
@@ -219,6 +230,7 @@ namespace LeitorCSV
                         raca.Descricao = RegexString(valores[48]).ToString();
 
                         candidato.CorRacaID = raca.ID;
+                        candidato.CorRaca = raca;
 
                         if (listaCorRaca.Exists(x => x.ID == raca.ID) == false)
                         {
@@ -230,6 +242,7 @@ namespace LeitorCSV
                         ocupacao.Descricao = RegexString(valores[50]).ToString();
 
                         candidato.OcupacaoID = ocupacao.Id;
+                        candidato.Ocupacao = ocupacao;
 
                         if (listaOcupacao.Exists(x => x.Id == ocupacao.Id) == false)
                         {
@@ -241,6 +254,7 @@ namespace LeitorCSV
                         situTurno.Descricao = RegexString(valores[53]).ToString();
 
                         candidato.SituacaoCandidatoTurnoId = situTurno.Id;
+                        candidato.SituacaoCandidatoTurno = situTurno;
 
                         if (listaSituCandidatoTurno.Exists(x => x.Id == situTurno.Id) == false)
                         {
@@ -252,6 +266,7 @@ namespace LeitorCSV
                         candidatura.InseridoUrna = RegexString(valores[62]).ToString();
 
                         candidato.SituacaoCandidaturaID = candidatura.Id;
+                        candidato.Candidatura = candidatura;
 
                         if (listaCandidatura.Exists(x => x.Id == candidatura.Id) == false)
                         {
@@ -263,6 +278,7 @@ namespace LeitorCSV
                         situPleito.Descricao = RegexString(valores[59]).ToString();
 
                         candidato.SituacaoPleitoID = situPleito.Id;
+                        candidato.SituacaoCandidatoPleito = situPleito;
 
                         if (listaPleito.Exists(x => x.Id == situPleito.Id) == false)
                         {
@@ -273,7 +289,8 @@ namespace LeitorCSV
                         situUrna.Id = Convert.ToInt32(RegexString(valores[60]));
                         situUrna.Descricao = RegexString(valores[61]).ToString();
 
-                        candidato.SituacaoUrnaID = situPleito.Id;
+                        candidato.SituacaoUrnaID = situUrna.Id;
+                        candidato.SituacaoCandidatoUrna = situUrna;
 
                         if (listaUrna.Exists(x => x.Id == situUrna.Id) == false)
                         {
@@ -285,7 +302,8 @@ namespace LeitorCSV
                 }
             }
 
-            LeituraBens(listaEstado, listaMunicipo);
+            var listaBens = LeituraBens(listaEstado, listaMunicipo);
+            var listaVagas = LeituraVagas(listaEstado, listaMunicipo);
 
             return listaCandidatos;
         }
@@ -296,7 +314,7 @@ namespace LeitorCSV
 
             var listaBens = new List<BemCandidato>();
             var listaTipoBem = new List<TipoBem>();
-         
+
             foreach (var arquivo in arquivos)
             {
                 using (var reader = new StreamReader(arquivo))
@@ -326,7 +344,9 @@ namespace LeitorCSV
                         municipio.Estado = estado;
 
                         bemCandidato.estadoId = estado.Id;
+                        bemCandidato.Estado = estado;
                         bemCandidato.municiopioId = municipio.Id;
+                        bemCandidato.Municipio = municipio;
 
                         if (listaEstados.Exists(x => x.Sigla.Equals(estado.Sigla)) == false)
                         {
@@ -343,13 +363,13 @@ namespace LeitorCSV
                         tipoBem.Descricao = RegexString(valores[14]).ToString();
 
                         bemCandidato.codigoTipoBemId = tipoBem.Id;
-
+                        bemCandidato.TipoBem = tipoBem;
                         if (listaTipoBem.Exists(x => x.Id.Equals(tipoBem.Id)) == false)
                         {
                             listaTipoBem.Add(tipoBem);
                         }
 
-                        bemCandidato.sqCandidatoId = Convert.ToInt32(RegexString(valores[11]));
+                        bemCandidato.sqCandidatoId = Convert.ToInt64(RegexString(valores[11]));
                         bemCandidato.numOrdemCandidato = Convert.ToInt32(RegexString(valores[12]));
                         bemCandidato.descricao = RegexString(valores[15]).ToString();
                         bemCandidato.valorBem = Convert.ToInt32(RegexString(valores[16]));
@@ -361,6 +381,92 @@ namespace LeitorCSV
             }
 
             return listaBens;
+        }
+
+        private static List<VagasCandidato> LeituraVagas(List<Estado> estados, List<Municipio> municipios)
+        {
+            var arquivos = ObterArquivos(@"C:\Users\solpe\Desktop\LDB\consulta_vagas_2020");
+
+            var listaCargos = new List<Cargo>();
+            var listaVagas = new List<VagasCandidato>();
+
+            foreach (var arquivo in arquivos)
+            {
+                using (var reader = new StreamReader(arquivo))
+                {
+                    bool cabecalhoLinha = true;
+
+                    while (!reader.EndOfStream)
+                    {
+                        var linha = reader.ReadLine();
+                        var valores = linha.Split(';');
+
+                        if (cabecalhoLinha)
+                        {
+                            cabecalhoLinha = false;
+                            continue;
+                        }
+
+                        var vagaCandidato = new VagasCandidato();
+
+                        var estado = new Estado();
+                        estado.Sigla = RegexString(valores[9]).ToString();
+
+                        var municipio = new Municipio();
+                        municipio.Id = Convert.ToInt32(RegexString(valores[10]));
+                        municipio.Nome = RegexString(valores[11]).ToString();
+                        municipio.EstadoID = estado.Id;
+                        municipio.Estado = estado;
+
+
+                        if (estados.Exists(x => x.Sigla.Equals(estado.Sigla)) == false)
+                        {
+                            estados.Add(estado);
+                        }
+
+                        if (municipios.Exists(x => x.Id == municipio.Id) == false)
+                        {
+                            municipios.Add(municipio);
+                        }
+
+                        var cargo = new Cargo();
+                        cargo.Id = Convert.ToInt32(RegexString(valores[12]));
+                        cargo.Descricao = RegexString(valores[13]).ToString();
+
+
+                        if (listaCargos.Exists(x => x.Id.Equals(cargo.Id)) == false)
+                        {
+                            listaCargos.Add(cargo);
+                        }
+
+                        vagaCandidato.DataEleicao = RegexString(valores[7]).ToString();
+                        vagaCandidato.DataPosse = RegexString(valores[8]).ToString();
+                        vagaCandidato.QtdeVagas = Convert.ToInt32(RegexString(valores[14]));
+                        vagaCandidato.EstadoID = estado.Id;
+                        vagaCandidato.Estado = estado;
+
+                        vagaCandidato.MunicipioId = municipio.Id;
+                        vagaCandidato.Municipio = municipio;
+
+                        vagaCandidato.CargoID = cargo.Id;
+                        vagaCandidato.Cargo = cargo;
+
+                        listaVagas.Add(vagaCandidato);
+                    }
+                }
+            }
+
+            return listaVagas;
+        }
+
+        private static void LeituraColigacao()
+        {
+
+        }
+
+        private static void LeituraCassacao()
+        {
+
         }
 
         private static string RegexString(string strIn)
@@ -381,4 +487,3 @@ namespace LeitorCSV
         }
     }
 }
-

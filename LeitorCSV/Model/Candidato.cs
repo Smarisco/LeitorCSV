@@ -50,5 +50,7 @@
         public virtual Coligacao Coligacao{ get; set; }
         public virtual Nacionalidade Nacionalidade { get; set; }
         public virtual CorRaca CorRaca { get; set; }
+        public virtual Candidatura Candidatura{ get; set; }
+
     }
 }
