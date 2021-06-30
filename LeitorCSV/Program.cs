@@ -12,10 +12,8 @@ namespace LeitorCSV
         {
             try
             {
-                var arquivos = ObterArquivos();
-
-                LeituraArquivoCSV(arquivos);
-
+               List<Candidato> candidatos = LeituraDadosCandidatos(@"C:\Users\solpe\Desktop\LDB\consulta_cand_2020");
+                
             }
             catch (Exception ex)
             {
@@ -23,16 +21,17 @@ namespace LeitorCSV
                 Console.WriteLine(ex.Message);
             }
         }
-        private static IEnumerable<string> ObterArquivos()
+        private static IEnumerable<string> ObterArquivos(string caminhoDaPasta)
         {
-            var caminhoDaPasta = @"C:\Users\solpe\Desktop\LDB\consulta_cand_2020";
             var arquivos = Directory.EnumerateFiles(caminhoDaPasta, "*.csv");
 
             return arquivos;
         }
 
-        public static void LeituraArquivoCSV(IEnumerable<string> arquivos)
+        public static List<Candidato> LeituraDadosCandidatos(string caminhoPasta)
         {
+            var arquivos = ObterArquivos(caminhoPasta);
+
             var listaCargos = new List<Cargo>();
             var listaMunicipo = new List<Municipio>();
             var listaEstado = new List<Estado>();
@@ -96,7 +95,7 @@ namespace LeitorCSV
                         {
                             listaEstado.Add(estado);
                         }
-                       
+
                         var municipio = new Municipio();
                         municipio.Id = Convert.ToInt32(RegexString(valores[11]));
                         municipio.Nome = RegexString(valores[12]).ToString();
@@ -115,11 +114,11 @@ namespace LeitorCSV
 
                         candidato.CargoID = cargo.Id;
 
-                        if (listaCargos.Exists( x => x.Id== cargo.Id) == false)
+                        if (listaCargos.Exists(x => x.Id == cargo.Id) == false)
                         {
                             listaCargos.Add(cargo);
                         }
-                      
+
                         var situCandidatura = new SituacaoCandidatura();
                         situCandidatura.Id = Convert.ToInt32(RegexString(valores[22]));
                         situCandidatura.Descricao = RegexString(valores[23]).ToString();
@@ -128,7 +127,7 @@ namespace LeitorCSV
 
                         if (listaSituCandidatura.Exists(x => x.Id == situCandidatura.Id) == false)
                         {
-                            listaSituCandidatura.Add(situCandidatura);                           
+                            listaSituCandidatura.Add(situCandidatura);
                         }
 
                         var detalhaSituacao = new DetalhaSituacaoCandidato();
@@ -180,11 +179,11 @@ namespace LeitorCSV
                         var genero = new Genero();
                         genero.Id = Convert.ToInt32(RegexString(valores[41]));
                         genero.Descricao = RegexString(valores[42]).ToString();
-                        
+
                         candidato.GeneroID = genero.Id;
 
                         if (listaGenero.Exists(x => x.Id == genero.Id))
-                        {   
+                        {
                             listaGenero.Add(genero);
                         }
 
@@ -193,8 +192,8 @@ namespace LeitorCSV
                         grauEnsino.Descricao = RegexString(valores[44]).ToString();
 
                         candidato.GrauInstrucaoID = grauEnsino.Id;
-                        
-                        if (listaGrauEnsino.Exists( x => x.Id == grauEnsino.Id) == false)
+
+                        if (listaGrauEnsino.Exists(x => x.Id == grauEnsino.Id) == false)
                         {
                             listaGrauEnsino.Add(grauEnsino);
                         }
@@ -224,7 +223,7 @@ namespace LeitorCSV
                         var ocupacao = new Ocupacao();
                         ocupacao.Id = Convert.ToInt32(RegexString(valores[49]));
                         ocupacao.Descricao = RegexString(valores[50]).ToString();
-                        
+
                         candidato.OcupacaoID = ocupacao.Id;
 
                         if (listaOcupacao.Exists(x => x.Id == ocupacao.Id) == false)
@@ -238,7 +237,7 @@ namespace LeitorCSV
 
                         candidato.SituacaoCandidatoTurnoId = situTurno.Id;
 
-                        if (listaSituCandidatoTurno.Exists( x => x.Id == situTurno.Id) == false)
+                        if (listaSituCandidatoTurno.Exists(x => x.Id == situTurno.Id) == false)
                         {
                             listaSituCandidatoTurno.Add(situTurno);
                         }
@@ -280,8 +279,10 @@ namespace LeitorCSV
                     }
                 }
             }
-        }
 
+            return listaCandidatos;
+        }
+        
         private static string RegexString(string strIn)
         {
             // Replace invalid characters with empty strings.
