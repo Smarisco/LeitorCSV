@@ -304,6 +304,7 @@ namespace LeitorCSV
 
             var listaBens = LeituraBens(listaEstado, listaMunicipo);
             var listaVagas = LeituraVagas(listaEstado, listaMunicipo);
+            var listaColigacaos = LeituraColigacao(listaEstado, listaMunicipo);
 
             return listaCandidatos;
         }
@@ -459,9 +460,93 @@ namespace LeitorCSV
             return listaVagas;
         }
 
-        private static void LeituraColigacao()
+        private static List<Coligacao> LeituraColigacao(List<Estado> estados, List<Municipio> municipios)
         {
+            var arquivos = ObterArquivos(@"C:\Users\solpe\Desktop\LDB\consulta_coligacao_2020");
+            var listaCargos = new List<Cargo>();
+            var listaColigacao = new List<Coligacao>();
+            var listaPartido = new List<Partido>();
 
+            foreach (var arquivo in arquivos)
+            {
+                using (var reader = new StreamReader(arquivo))
+                {
+                    bool cabecalhoLinha = true;
+
+                    while (!reader.EndOfStream)
+                    {
+                        var linha = reader.ReadLine();
+                        var valores = linha.Split(';');
+
+                        if (cabecalhoLinha)
+                        {
+                            cabecalhoLinha = false;
+                            continue;
+                        }
+
+                        var coligacao= new Coligacao();
+
+                        var estado = new Estado();
+                        estado.Sigla = RegexString(valores[9]).ToString();
+
+                        var municipio = new Municipio();
+                        municipio.Id = Convert.ToInt32(RegexString(valores[10]));
+                        municipio.Nome = RegexString(valores[11]).ToString();
+                        municipio.EstadoID = estado.Id;
+                        municipio.Estado = estado;
+
+                        var cargo = new Cargo();
+                        cargo.Id = Convert.ToInt32(RegexString(valores[12]));
+                        cargo.Descricao = RegexString(valores[13]).ToString();
+
+                        var partido = new Partido();
+                        partido.Id = Convert.ToInt32(RegexString(valores[15]));
+                        partido.Sigla = RegexString(valores[16]).ToString();
+                        partido.Nome = RegexString(valores[17]).ToString();
+
+                        if (estados.Exists(x => x.Sigla.Equals(estado.Sigla)) == false)
+                        {
+                            estados.Add(estado);
+                        }
+
+                        if (municipios.Exists(x => x.Id == municipio.Id) == false)
+                        {
+                            municipios.Add(municipio);
+                        }                        
+
+                        if (listaCargos.Exists(x => x.Id.Equals(cargo.Id)) == false)
+                        {
+                            listaCargos.Add(cargo);
+                        }
+
+                        if (listaPartido.Exists(x => x.Id.Equals(partido.Id)) == false)
+                        {
+                            listaPartido.Add(partido);
+                        }
+
+                        coligacao.Id = Convert.ToInt64(RegexString(valores[18]));
+                        coligacao.Nome = RegexString(valores[19]).ToString();
+                        coligacao.Agremiacao = RegexString(valores[14]).ToString();
+                        coligacao.Composicao = RegexString(valores[20]).ToString();
+                        coligacao.SituacaoLegenda = RegexString(valores[22]).ToString();
+
+                        coligacao.EstadoId= estado.Id;
+                        coligacao.Estado= estado;
+
+                        coligacao.MunicipioId = municipio.Id;
+                        coligacao.Municipio = municipio;
+
+                        coligacao.CargoID = cargo.Id;
+                        coligacao.Cargo = cargo;
+
+                        coligacao.Partido = partido;
+                        coligacao.PartidoId = partido.Id;
+
+                        listaColigacao.Add(coligacao);
+                    }
+                }
+            }
+            return listaColigacao;
         }
 
         private static void LeituraCassacao()
