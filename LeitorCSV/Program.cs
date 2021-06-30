@@ -1,4 +1,5 @@
 ﻿using LeitorCSV.Model;
+using LeitorCSV.Model.Bens;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,8 +13,11 @@ namespace LeitorCSV
         {
             try
             {
-               List<Candidato> candidatos = LeituraDadosCandidatos(@"C:\Users\solpe\Desktop\LDB\consulta_cand_2020");
-                
+                var teste = LeituraDados();
+
+                //    List<Candidato> candidatos = LeituraDadosCandidatos();
+
+                //    LeituraBens();
             }
             catch (Exception ex)
             {
@@ -27,10 +31,10 @@ namespace LeitorCSV
 
             return arquivos;
         }
-
-        public static List<Candidato> LeituraDadosCandidatos(string caminhoPasta)
+        
+        public static List<Candidato> LeituraDados()
         {
-            var arquivos = ObterArquivos(caminhoPasta);
+            var arquivosCandidato = ObterArquivos(@"C:\Users\solpe\Desktop\LDB\consulta_cand_2020");
 
             var listaCargos = new List<Cargo>();
             var listaMunicipo = new List<Municipio>();
@@ -52,7 +56,7 @@ namespace LeitorCSV
             var listaCandidatos = new List<Candidato>();
 
 
-            foreach (var arquivo in arquivos)
+            foreach (var arquivo in arquivosCandidato)
             {
                 using (var reader = new StreamReader(arquivo))
                 {
@@ -99,8 +103,9 @@ namespace LeitorCSV
                         var municipio = new Municipio();
                         municipio.Id = Convert.ToInt32(RegexString(valores[11]));
                         municipio.Nome = RegexString(valores[12]).ToString();
+                        municipio.EstadoID = estado.Id;
                         municipio.Estado = estado;
-                        // add id estado
+
                         candidato.MunicipioID = municipio.Id;
 
                         if (listaMunicipo.Exists(x => x.Id == municipio.Id) == false)
@@ -280,9 +285,84 @@ namespace LeitorCSV
                 }
             }
 
+            LeituraBens(listaEstado, listaMunicipo);
+
             return listaCandidatos;
         }
-        
+
+        private static List<BemCandidato> LeituraBens(List<Estado> listaEstados, List<Municipio> listaMunicipios)
+        {
+            var arquivos = ObterArquivos(@"C:\Users\solpe\Desktop\LDB\bem_candidato_2020");
+
+            var listaBens = new List<BemCandidato>();
+            var listaTipoBem = new List<TipoBem>();
+         
+            foreach (var arquivo in arquivos)
+            {
+                using (var reader = new StreamReader(arquivo))
+                {
+                    bool cabecalhoLinha = true;
+
+                    while (!reader.EndOfStream)
+                    {
+                        var linha = reader.ReadLine();
+                        var valores = linha.Split(';');
+
+                        if (cabecalhoLinha)
+                        {
+                            cabecalhoLinha = false;
+                            continue;
+                        }
+
+                        var bemCandidato = new BemCandidato();
+
+                        var estado = new Estado();
+                        estado.Sigla = RegexString(valores[8]).ToString();
+
+                        var municipio = new Municipio();
+                        municipio.Id = Convert.ToInt32(RegexString(valores[9]));
+                        municipio.Nome = RegexString(valores[10]).ToString();
+                        municipio.EstadoID = estado.Id;
+                        municipio.Estado = estado;
+
+                        bemCandidato.estadoId = estado.Id;
+                        bemCandidato.municiopioId = municipio.Id;
+
+                        if (listaEstados.Exists(x => x.Sigla.Equals(estado.Sigla)) == false)
+                        {
+                            listaEstados.Add(estado);
+                        }
+
+                        if (listaMunicipios.Exists(x => x.Id == municipio.Id) == false)
+                        {
+                            listaMunicipios.Add(municipio);
+                        }
+
+                        var tipoBem = new TipoBem();
+                        tipoBem.Id = Convert.ToInt32(RegexString(valores[13]));
+                        tipoBem.Descricao = RegexString(valores[14]).ToString();
+
+                        bemCandidato.codigoTipoBemId = tipoBem.Id;
+
+                        if (listaTipoBem.Exists(x => x.Id.Equals(tipoBem.Id)) == false)
+                        {
+                            listaTipoBem.Add(tipoBem);
+                        }
+
+                        bemCandidato.sqCandidatoId = Convert.ToInt32(RegexString(valores[11]));
+                        bemCandidato.numOrdemCandidato = Convert.ToInt32(RegexString(valores[12]));
+                        bemCandidato.descricao = RegexString(valores[15]).ToString();
+                        bemCandidato.valorBem = Convert.ToInt32(RegexString(valores[16]));
+
+                        listaBens.Add(bemCandidato);
+                        ///ver se ja vai salvar aqui ou nao
+                    }
+                }
+            }
+
+            return listaBens;
+        }
+
         private static string RegexString(string strIn)
         {
             // Replace invalid characters with empty strings.
