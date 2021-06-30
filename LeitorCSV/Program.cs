@@ -305,6 +305,7 @@ namespace LeitorCSV
             var listaBens = LeituraBens(listaEstado, listaMunicipo);
             var listaVagas = LeituraVagas(listaEstado, listaMunicipo);
             var listaColigacaos = LeituraColigacao(listaEstado, listaMunicipo);
+            var listaCassacaos = LeituraCassacao(listaEstado, listaMunicipo);
 
             return listaCandidatos;
         }
@@ -549,9 +550,64 @@ namespace LeitorCSV
             return listaColigacao;
         }
 
-        private static void LeituraCassacao()
+        private static List<Cassacao> LeituraCassacao(List<Estado> estados, List<Municipio> municipios)
         {
+            var arquivos = ObterArquivos(@"C:\Users\solpe\Desktop\LDB\motivo_cassacao_2020");
+            var listaCasssacao = new List<Cassacao>();
+            
+            foreach (var arquivo in arquivos)
+            {
+                using (var reader = new StreamReader(arquivo))
+                {
+                    bool cabecalhoLinha = true;
 
+                    while (!reader.EndOfStream)
+                    {
+                        var linha = reader.ReadLine();
+                        var valores = linha.Split(';');
+
+                        if (cabecalhoLinha)
+                        {
+                            cabecalhoLinha = false;
+                            continue;
+                        }
+
+                        var cassacao = new Cassacao();
+
+                        var estado = new Estado();
+                        estado.Sigla = RegexString(valores[7]).ToString();
+
+                        var municipio = new Municipio();
+                        municipio.Id = Convert.ToInt32(RegexString(valores[8]));
+                        municipio.Nome = RegexString(valores[9]).ToString();
+                        municipio.EstadoID = estado.Id;
+                        municipio.Estado = estado;
+
+                        if (estados.Exists(x => x.Sigla.Equals(estado.Sigla)) == false)
+                        {
+                            estados.Add(estado);
+                        }
+
+                        if (municipios.Exists(x => x.Id == municipio.Id) == false)
+                        {
+                            municipios.Add(municipio);
+                        }
+
+                        cassacao.CandidatoID = Convert.ToInt64(RegexString(valores[10]));
+                        cassacao.Motivo = RegexString(valores[11]).ToString();
+
+                        cassacao.EstadoID = estado.Id;
+                        cassacao.Estado = estado;
+
+                        cassacao.MunicipioId = municipio.Id;
+                        cassacao.Municipio = municipio;
+
+                        listaCasssacao.Add(cassacao);
+                    }
+                }
+            }
+
+            return listaCasssacao;
         }
 
         private static string RegexString(string strIn)
