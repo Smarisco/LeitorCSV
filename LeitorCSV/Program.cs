@@ -35,7 +35,8 @@ namespace LeitorCSV
 
         public static List<Candidato> LeituraDados()
         {
-            var arquivosCandidato = ObterArquivos(@"C:\Users\solpe\Desktop\LDB\consulta_cand_2020");
+            //var arquivosCandidato = ObterArquivos(@"C:\Users\solpe\Desktop\LDB\consulta_cand_2020");
+            var arquivosCandidato = ObterArquivos(@"C:\BackupStela\STELA\Projetos\TrabalhoLabBDEleicoes\Arquivos\consulta_cand_2020");
 
             var listaCargos = new List<Cargo>();
             var listaMunicipo = new List<Municipio>();
@@ -312,8 +313,9 @@ namespace LeitorCSV
 
         private static List<BemCandidato> LeituraBens(List<Estado> listaEstados, List<Municipio> listaMunicipios)
         {
-            var arquivos = ObterArquivos(@"C:\Users\solpe\Desktop\LDB\bem_candidato_2020");
+            // var arquivos = ObterArquivos(@"C:\Users\solpe\Desktop\LDB\bem_candidato_2020");
 
+            var arquivos = ObterArquivos(@"C:\BackupStela\STELA\Projetos\TrabalhoLabBDEleicoes\Arquivos\bem_candidato_2020");
             var listaBens = new List<BemCandidato>();
             var listaTipoBem = new List<TipoBem>();
 
@@ -387,7 +389,8 @@ namespace LeitorCSV
 
         private static List<VagasCandidato> LeituraVagas(List<Estado> estados, List<Municipio> municipios)
         {
-            var arquivos = ObterArquivos(@"C:\Users\solpe\Desktop\LDB\consulta_vagas_2020");
+            //var arquivos = ObterArquivos(@"C:\Users\solpe\Desktop\LDB\consulta_vagas_2020");
+            var arquivos = ObterArquivos(@"C:\BackupStela\STELA\Projetos\TrabalhoLabBDEleicoes\Arquivos\consulta_vagas_2020");
 
             var listaCargos = new List<Cargo>();
             var listaVagas = new List<VagasCandidato>();
@@ -463,7 +466,9 @@ namespace LeitorCSV
 
         private static List<Coligacao> LeituraColigacao(List<Estado> estados, List<Municipio> municipios)
         {
-            var arquivos = ObterArquivos(@"C:\Users\solpe\Desktop\LDB\consulta_coligacao_2020");
+            //var arquivos = ObterArquivos(@"C:\Users\solpe\Desktop\LDB\consulta_coligacao_2020");
+            var arquivos = ObterArquivos(@"C:\BackupStela\STELA\Projetos\TrabalhoLabBDEleicoes\Arquivos\consulta_coligacao_2020");
+
             var listaCargos = new List<Cargo>();
             var listaColigacao = new List<Coligacao>();
             var listaPartido = new List<Partido>();
@@ -552,7 +557,9 @@ namespace LeitorCSV
 
         private static List<Cassacao> LeituraCassacao(List<Estado> estados, List<Municipio> municipios)
         {
-            var arquivos = ObterArquivos(@"C:\Users\solpe\Desktop\LDB\motivo_cassacao_2020");
+            //var arquivos = ObterArquivos(@"C:\Users\solpe\Desktop\LDB\motivo_cassacao_2020");
+            var arquivos = ObterArquivos(@"C:\BackupStela\STELA\Projetos\TrabalhoLabBDEleicoes\Arquivos\motivo_cassacao_2020");
+
             var listaCasssacao = new List<Cassacao>();
             
             foreach (var arquivo in arquivos)
