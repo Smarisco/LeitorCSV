@@ -314,7 +314,21 @@ namespace LeitorCSV
 
             SalvarDadosEstado(listaEstado);
             SalvarDadosMunicipio(listaMunicipo);
-            SalvarDadosCargo();
+            SalvarDadosCargo(listaCargos);
+            SalvarDadosCorRaca(listaCorRaca);
+            SalvarDadosEstadoCivil(listaEstadoCivil);
+            SalvarDadosGenero(listaGenero);
+            SalvarDadosGrauInstrucao(listaGrauEnsino);
+            SalvarDadosPartido(listaPartido);
+            SalvarDadosOcupacao(listaOcupacao);
+            SalvarDadosSituacaoCandidatoPleito(listaPleito);
+            SalvarDadosSituacaoCandidatoUrna(listaUrna)
+                --- Candidatura
+                //detalha situacao candidato
+                //nacionalidade
+                //situcandidatura
+                //situturno
+                //candidato
 
             return listaCandidatos;
         }
@@ -773,10 +787,224 @@ namespace LeitorCSV
             Console.WriteLine("\nFim da inserção de dados de Municipios.");
         }
 
-        private static void SalvarDadosCargo()
+        private static void SalvarDadosCargo(List<Cargo> cargos)
         {
+            string connStr = "User ID=postgres;Password=123;Host=localhost;Port=5432;Database=Trabalho;Pooling=true;";
+            var m_conn = new NpgsqlConnection(connStr);
 
+            Console.WriteLine("\nInicio da inserção de dados de Cargos.");
+
+            foreach (var cargo in cargos)
+            {
+                string sqlInsert = @$"INSERT INTO  cargo(                             
+                            id, 
+                            descricao) 
+                         VALUES ({cargo.Id}, '{cargo.Descricao}')";
+
+                m_conn.Open();
+                var m_createdb_cmd = new NpgsqlCommand(sqlInsert, m_conn);
+
+                m_createdb_cmd.ExecuteNonQuery();
+                m_conn.Close();
+            }
+
+            Console.WriteLine("\nFim da inserção de dados de cargos.");
         }
+
+        private static void SalvarDadosCorRaca(List<CorRaca> corRacas)
+        {
+            string connStr = "User ID=postgres;Password=123;Host=localhost;Port=5432;Database=Trabalho;Pooling=true;";
+            var m_conn = new NpgsqlConnection(connStr);
+
+            Console.WriteLine("\nInicio da inserção de dados de Raça.");
+
+            foreach (var corRaca in corRacas)
+            {
+                string sqlInsert = @$"INSERT INTO  corraca(                    
+                            id, 
+                            descricao) 
+                         VALUES ({corRaca.ID}, '{corRaca.Descricao}')";
+
+                m_conn.Open();
+                var m_createdb_cmd = new NpgsqlCommand(sqlInsert, m_conn);
+
+                m_createdb_cmd.ExecuteNonQuery();
+                m_conn.Close();
+            }
+
+            Console.WriteLine("\nFim da inserção de dados de raça.");
+        }
+
+        private static void SalvarDadosEstadoCivil(List<EstadoCivil> estadoCivils)
+        {
+            string connStr = "User ID=postgres;Password=123;Host=localhost;Port=5432;Database=Trabalho;Pooling=true;";
+            var m_conn = new NpgsqlConnection(connStr);
+
+            Console.WriteLine("\nInicio da inserção de dados de estado civil.");
+
+            foreach (var item in estadoCivils)
+            {
+                string sqlInsert = @$"INSERT INTO  estadoCivil(                    
+                            id, 
+                            descricao) 
+                         VALUES ({item.Id}, '{item.Descricao}')";
+
+                m_conn.Open();
+                var m_createdb_cmd = new NpgsqlCommand(sqlInsert, m_conn);
+
+                m_createdb_cmd.ExecuteNonQuery();
+                m_conn.Close();
+            }
+
+            Console.WriteLine("\nFim da inserção de dados de estado civil.");
+        }
+
+        private static void SalvarDadosGenero(List<Genero> generos)
+        {
+            string connStr = "User ID=postgres;Password=123;Host=localhost;Port=5432;Database=Trabalho;Pooling=true;";
+            var m_conn = new NpgsqlConnection(connStr);
+
+            Console.WriteLine("\nInicio da inserção de dados de genero.");
+
+            foreach (var item in generos)  
+            {
+                string sqlInsert = @$"INSERT INTO  genero(                    
+                            id, 
+                            descricao) 
+                         VALUES ({item.Id}, '{item.Descricao}')";
+
+                m_conn.Open();
+                var m_createdb_cmd = new NpgsqlCommand(sqlInsert, m_conn);
+
+                m_createdb_cmd.ExecuteNonQuery();
+                m_conn.Close();
+            }
+
+            Console.WriteLine("\nFim da inserção de dados de genero.");
+        }
+
+        private static void SalvarDadosGrauInstrucao(List<GrauInstrucao> grauInstrucaos)
+        {
+            string connStr = "User ID=postgres;Password=123;Host=localhost;Port=5432;Database=Trabalho;Pooling=true;";
+            var m_conn = new NpgsqlConnection(connStr);
+
+            Console.WriteLine("\nInicio da inserção de dados de grau de instrução.");
+
+            foreach (var item in grauInstrucaos)
+            {
+                string sqlInsert = @$"INSERT INTO  grauInstrucao(                    
+                            id, 
+                            descricao) 
+                         VALUES ({item.Id}, '{item.Descricao}')";
+
+                m_conn.Open();
+                var m_createdb_cmd = new NpgsqlCommand(sqlInsert, m_conn);
+
+                m_createdb_cmd.ExecuteNonQuery();
+                m_conn.Close();
+            }
+
+            Console.WriteLine("\nFim da inserção de dados de grau de instrução.");
+        }
+
+        private static void SalvarDadosOcupacao(List<Ocupacao> ocupacaos)
+        {
+            string connStr = "User ID=postgres;Password=123;Host=localhost;Port=5432;Database=Trabalho;Pooling=true;";
+            var m_conn = new NpgsqlConnection(connStr);
+
+            Console.WriteLine("\nInicio da inserção de dados de Ocupacao.");
+
+            foreach (var item in ocupacaos)
+            {
+                string sqlInsert = @$"INSERT INTO  ocupacao(                    
+                            id, 
+                            descricao) 
+                         VALUES ({item.Id}, '{item.Descricao}')";
+
+                m_conn.Open();
+                var m_createdb_cmd = new NpgsqlCommand(sqlInsert, m_conn);
+
+                m_createdb_cmd.ExecuteNonQuery();
+                m_conn.Close();
+            }
+
+            Console.WriteLine("\nFim da inserção de dados de grau de ocupacao.");
+        }
+
+        private static void SalvarDadosPartido(List<Partido> partidos)
+        {
+            string connStr = "User ID=postgres;Password=123;Host=localhost;Port=5432;Database=Trabalho;Pooling=true;";
+            var m_conn = new NpgsqlConnection(connStr);
+
+            Console.WriteLine("\nInicio da inserção de dados de partido.");
+
+            foreach (var item in partidos)
+            {
+                string sqlInsert = @$"INSERT INTO  partido(                    
+                            id, 
+                            nome,
+                            sigla,
+                            agremiacao) 
+                         VALUES ({item.Id}, '{item.Nome}','{item.Sigla}','{item.TipoAgremiacao}')";
+
+                m_conn.Open();
+                var m_createdb_cmd = new NpgsqlCommand(sqlInsert, m_conn);
+
+                m_createdb_cmd.ExecuteNonQuery();
+                m_conn.Close();
+            }
+
+            Console.WriteLine("\nFim da inserção de dados de partido.");
+        }
+
+        private static void SalvarDadosSituacaoCandidatoPleito(List<SituacaoCandidatoPleito> situacaoCandidatoPleitos)
+        {
+            string connStr = "User ID=postgres;Password=123;Host=localhost;Port=5432;Database=Trabalho;Pooling=true;";
+            var m_conn = new NpgsqlConnection(connStr);
+
+            Console.WriteLine("\nInicio da inserção de dados de situacao Candidato pleito.");
+
+            foreach (var item in situacaoCandidatoPleitos)
+            {
+                string sqlInsert = @$"INSERT INTO  situacaoCandidatoPleito(                    
+                            id, 
+                            descricao) 
+                         VALUES ({item.Id}, '{item.Descricao}')";
+
+                m_conn.Open();
+                var m_createdb_cmd = new NpgsqlCommand(sqlInsert, m_conn);
+
+                m_createdb_cmd.ExecuteNonQuery();
+                m_conn.Close();
+            }
+
+            Console.WriteLine("\nFim da inserção de dados de grau de situacao Candidato pleito.");
+        }
+
+        private static void SalvarDadosSituacaoCandidatoUrna(List<SituacaoCandidatoUrna> situacaoCandidatoUrnas)
+        {
+            string connStr = "User ID=postgres;Password=123;Host=localhost;Port=5432;Database=Trabalho;Pooling=true;";
+            var m_conn = new NpgsqlConnection(connStr);
+
+            Console.WriteLine("\nInicio da inserção de dados de situacao Candidato URNA.");
+
+            foreach (var item in situacaoCandidatoUrnas)
+            {
+                string sqlInsert = @$"INSERT INTO  situacaoCandidatoUrna(                    
+                            id, 
+                            descricao) 
+                         VALUES ({item.Id}, '{item.Descricao}')";
+
+                m_conn.Open();
+                var m_createdb_cmd = new NpgsqlCommand(sqlInsert, m_conn);
+
+                m_createdb_cmd.ExecuteNonQuery();
+                m_conn.Close();
+            }
+
+            Console.WriteLine("\nFim da inserção de dados de grau de situacao Candidato urna.");
+        }
+
         private static string RegexString(string strIn)
         {
             // Replace invalid characters with empty strings.
