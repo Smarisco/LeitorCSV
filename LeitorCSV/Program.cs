@@ -304,14 +304,15 @@ namespace LeitorCSV
 
             //var listaBens = LeituraBens(listaEstado, listaMunicipo); // ver o erro
             var listaVagas = LeituraVagas(listaEstado, listaMunicipo);
-            SalvarDadosVagas(listaVagas);
-
+            
             var listaColigacaos = LeituraColigacao(listaEstado, listaMunicipo);
-            SalvarDadosColigacao(listaColigacao);
-
+            
             var listaCassacaos = LeituraCassacao(listaEstado, listaMunicipo);
+            
+            SalvarDadosVagas(listaVagas);
+            SalvarDadosColigacao(listaColigacao);
+            SalvarDadosCandidato(listaCandidatos);
             SalvarDadosCassacao(listaCassacaos);
-
             SalvarDadosEstado(listaEstado);
             SalvarDadosMunicipio(listaMunicipo);
             SalvarDadosCargo(listaCargos);
@@ -322,13 +323,12 @@ namespace LeitorCSV
             SalvarDadosPartido(listaPartido);
             SalvarDadosOcupacao(listaOcupacao);
             SalvarDadosSituacaoCandidatoPleito(listaPleito);
-            SalvarDadosSituacaoCandidatoUrna(listaUrna)
-                --- Candidatura
-                //detalha situacao candidato
-                //nacionalidade
-                //situcandidatura
-                //situturno
-                //candidato
+            SalvarDadosSituacaoCandidatoUrna(listaUrna);
+            SalvarDadosNacionalidade(listaNascionalidade);
+            SalvarDadosDetalhaSituacaoCandidato(listaDetalhaSituacao);
+            SalvarDadosCandidatura(listaCandidatura);
+            SalvarDadosSituacaoCandidatura(listaSituCandidatura);
+            SalvarDadosSituacaoTurno(listaSituCandidatoTurno);
 
             return listaCandidatos;
         }
@@ -649,7 +649,62 @@ namespace LeitorCSV
             return listaCasssacao;
         }
 
-        private static void SalvarDadosVagas(List<VagasCandidato> vagasCandidatos)
+        private static void SalvarDadosCandidato(List<Candidato> candidatos)
+        {
+            string connStr = "User ID=postgres;Password=123;Host=localhost;Port=5432;Database=Trabalho;Pooling=true;";
+            var m_conn = new NpgsqlConnection(connStr);
+
+            Console.WriteLine("\nInicio da inserção de dados de vagas.");
+
+            foreach (var item in candidatos)
+            {
+                string sqlInsert = @$"INSERT INTO  candidato (                             
+                            id, 
+                            nome, 
+                            nomeUrna, 
+                            nomeSocial, 
+                            numero, 
+                            dataNascimento,
+                            tituloEleitor,
+                            cpf,
+                            email,
+                            idadePosse,
+                            valorMaxCampanha,
+                            reeleicao,
+                            declararBens,
+                            numeroProcesso,
+                            estadoID,
+                            MunicipioId,
+                            generoID,
+                            grauInstrucaoID,
+                            estadoCivilID,
+                            cargoID,
+                            corRacaID,
+                            ocupacaoID,
+                            situacaoPleitoID,
+                            situacaoCandidaturaId,
+                            situacaoUrnaId,
+                            situacaoCandidatoTurnoId,
+                            detalhaSituacaoCandidatoiId,
+                            partidoID,
+                            coligacaoId,
+                            nascionalidadeId) 
+                         VALUES ({item.Id}, '{item.Nome}', '{item.NomeUrna}', '{item.NomeSocial}', '{item.Numero}', '{item.DataNascimento}', 
+                                 '{item.TituloEleitor}','{item.Cpf}','{item.Email}','{item.IdadePosse}','{item.ValorMaxCampanha}','{item.Reeleicao}',
+                                 '{item.DeclararBens}','{item.NumeroProcesso}','{item.EstadoID}','{item.MunicipioID}','{item.GeneroID}','{item.GrauInstrucaoID}',
+                                 '{item.EstadoCivilID}','{item.CargoID}','{item.CorRacaID}','{item.OcupacaoID}','{item.SituacaoPleitoID}','{item.SituacaoCandidaturaID}',
+                                 '{item.SituacaoUrnaID}','{item.SituacaoCandidatoTurnoId}','{item.DetalhaSituacaoCandidatoId}','{item.PartidoId}',
+                                 '{item.ColigacaoID}','{item.NacionalidadeID}')";
+
+                m_conn.Open();
+                var m_createdb_cmd = new NpgsqlCommand(sqlInsert, m_conn);
+
+                m_createdb_cmd.ExecuteNonQuery();
+                m_conn.Close();
+            }
+        }
+
+       private static void SalvarDadosVagas(List<VagasCandidato> vagasCandidatos)
         {
             string connStr = "User ID=postgres;Password=123;Host=localhost;Port=5432;Database=Trabalho;Pooling=true;";
             var m_conn = new NpgsqlConnection(connStr);
@@ -1003,6 +1058,127 @@ namespace LeitorCSV
             }
 
             Console.WriteLine("\nFim da inserção de dados de grau de situacao Candidato urna.");
+        }
+
+        private static void SalvarDadosNacionalidade(List<Nacionalidade> nacionalidades)
+        {
+            string connStr = "User ID=postgres;Password=123;Host=localhost;Port=5432;Database=Trabalho;Pooling=true;";
+            var m_conn = new NpgsqlConnection(connStr);
+
+            Console.WriteLine("\nInicio da inserção de dados de nascionalidade.");
+
+            foreach (var item in nacionalidades)
+            {
+                string sqlInsert = @$"INSERT INTO  nascionalidade(                    
+                            id, 
+                            descricao) 
+                         VALUES ({item.Id}, '{item.Descricao}')";
+
+                m_conn.Open();
+                var m_createdb_cmd = new NpgsqlCommand(sqlInsert, m_conn);
+
+                m_createdb_cmd.ExecuteNonQuery();
+                m_conn.Close();
+            }
+
+            Console.WriteLine("\nFim da inserção de dados de grau de nascionalidade.");
+        }
+
+        private static void SalvarDadosDetalhaSituacaoCandidato(List<DetalhaSituacaoCandidato> detalhaSituacaoCandidatos)
+        {
+            string connStr = "User ID=postgres;Password=123;Host=localhost;Port=5432;Database=Trabalho;Pooling=true;";
+            var m_conn = new NpgsqlConnection(connStr);
+
+            Console.WriteLine("\nInicio da inserção de dados de detalhaSituacaoCandidato.");
+
+            foreach (var item in detalhaSituacaoCandidatos)
+            {
+                string sqlInsert = @$"INSERT INTO  detalhaSituacaoCandidato(                    
+                            id, 
+                            descricao) 
+                         VALUES ({item.Id}, '{item.Descricao}')";
+
+                m_conn.Open();
+                var m_createdb_cmd = new NpgsqlCommand(sqlInsert, m_conn);
+
+                m_createdb_cmd.ExecuteNonQuery();
+                m_conn.Close();
+            }
+
+            Console.WriteLine("\nFim da inserção de dados de detalhaSituacaoCandidato.");
+        }
+
+        private static void SalvarDadosCandidatura(List<Candidatura> candidaturas)
+        {
+            string connStr = "User ID=postgres;Password=123;Host=localhost;Port=5432;Database=Trabalho;Pooling=true;";
+            var m_conn = new NpgsqlConnection(connStr);
+
+            Console.WriteLine("\nInicio da inserção de dados de candidatura.");
+
+            foreach (var item in candidaturas)
+            {
+                string sqlInsert = @$"INSERT INTO  candidatura(                    
+                            id, 
+                            numeroProtocolo,
+                            inseridoUrna) 
+                         VALUES ({item.Id}, '{item.NumeroProtocolo}','{item.InseridoUrna}')";
+
+                m_conn.Open();
+                var m_createdb_cmd = new NpgsqlCommand(sqlInsert, m_conn);
+
+                m_createdb_cmd.ExecuteNonQuery();
+                m_conn.Close();
+            }
+
+            Console.WriteLine("\nFim da inserção de dados de candidatura.");
+        }
+
+        private static void SalvarDadosSituacaoCandidatura(List<SituacaoCandidatura> candidaturas)
+        {
+            string connStr = "User ID=postgres;Password=123;Host=localhost;Port=5432;Database=Trabalho;Pooling=true;";
+            var m_conn = new NpgsqlConnection(connStr);
+
+            Console.WriteLine("\nInicio da inserção de dados de situacao da candidatura.");
+
+            foreach (var item in candidaturas)
+            {
+                string sqlInsert = @$"INSERT INTO  situacaoCandidatura(                    
+                            id, 
+                            descricao) 
+                         VALUES ({item.Id}, '{item.Descricao}')";
+
+                m_conn.Open();
+                var m_createdb_cmd = new NpgsqlCommand(sqlInsert, m_conn);
+
+                m_createdb_cmd.ExecuteNonQuery();
+                m_conn.Close();
+            }
+
+            Console.WriteLine("\nFim da inserção de dados da situacao candidatura.");
+        }
+
+        private static void SalvarDadosSituacaoTurno(List<SituacaoCandidatoTurno> situacaoCandidatoTurnos)
+        {
+            string connStr = "User ID=postgres;Password=123;Host=localhost;Port=5432;Database=Trabalho;Pooling=true;";
+            var m_conn = new NpgsqlConnection(connStr);
+
+            Console.WriteLine("\nInicio da inserção de dados de situacao candidato turno .");
+
+            foreach (var item in situacaoCandidatoTurnos)
+            {
+                string sqlInsert = @$"INSERT INTO  situacaoCandidatoTurno(                    
+                            id, 
+                            descricao) 
+                         VALUES ({item.Id}, '{item.Descricao}')";
+
+                m_conn.Open();
+                var m_createdb_cmd = new NpgsqlCommand(sqlInsert, m_conn);
+
+                m_createdb_cmd.ExecuteNonQuery();
+                m_conn.Close();
+            }
+
+            Console.WriteLine("\nFim da inserção de dados da situacao candidato turno.");
         }
 
         private static string RegexString(string strIn)
