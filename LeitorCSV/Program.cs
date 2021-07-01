@@ -1,6 +1,7 @@
 ﻿using LeitorCSV.Model;
 using LeitorCSV.Model.Bens;
 using LeitorCSV.Model.Vagas;
+using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,11 +15,9 @@ namespace LeitorCSV
         {
             try
             {
+                Console.WriteLine("Inicio da execucao do programa.\nObs : A leitura de dados será demorada. Aguarde........");
                 var teste = LeituraDados();
 
-                //    List<Candidato> candidatos = LeituraDadosCandidatos();
-
-                //    LeituraBens();
             }
             catch (Exception ex)
             {
@@ -35,8 +34,8 @@ namespace LeitorCSV
 
         public static List<Candidato> LeituraDados()
         {
-            //var arquivosCandidato = ObterArquivos(@"C:\Users\solpe\Desktop\LDB\consulta_cand_2020");
-            var arquivosCandidato = ObterArquivos(@"C:\BackupStela\STELA\Projetos\TrabalhoLabBDEleicoes\Arquivos\consulta_cand_2020");
+            var arquivosCandidato = ObterArquivos(@"C:\Users\solpe\Desktop\LDB\consulta_cand_2020");
+            //var arquivosCandidato = ObterArquivos(@"C:\BackupStela\STELA\Projetos\TrabalhoLabBDEleicoes\Arquivos\consulta_cand_2020");
 
             var listaCargos = new List<Cargo>();
             var listaMunicipo = new List<Municipio>();
@@ -303,19 +302,29 @@ namespace LeitorCSV
                 }
             }
 
-            var listaBens = LeituraBens(listaEstado, listaMunicipo);
+            //var listaBens = LeituraBens(listaEstado, listaMunicipo); // ver o erro
             var listaVagas = LeituraVagas(listaEstado, listaMunicipo);
+            SalvarDadosVagas(listaVagas);
+
             var listaColigacaos = LeituraColigacao(listaEstado, listaMunicipo);
+            SalvarDadosColigacao(listaColigacao);
+
             var listaCassacaos = LeituraCassacao(listaEstado, listaMunicipo);
+            SalvarDadosCassacao(listaCassacaos);
+
+            SalvarDadosEstado(listaEstado);
+            SalvarDadosMunicipio(listaMunicipo);
+            SalvarDadosCargo();
 
             return listaCandidatos;
         }
 
         private static List<BemCandidato> LeituraBens(List<Estado> listaEstados, List<Municipio> listaMunicipios)
         {
-            // var arquivos = ObterArquivos(@"C:\Users\solpe\Desktop\LDB\bem_candidato_2020");
+            var arquivos = ObterArquivos(@"C:\Users\solpe\Desktop\LDB\bem_candidato_2020");
+            Console.WriteLine("Iniciando leitura do dados de bens");
 
-            var arquivos = ObterArquivos(@"C:\BackupStela\STELA\Projetos\TrabalhoLabBDEleicoes\Arquivos\bem_candidato_2020");
+            //var arquivos = ObterArquivos(@"C:\BackupStela\STELA\Projetos\TrabalhoLabBDEleicoes\Arquivos\bem_candidato_2020");
             var listaBens = new List<BemCandidato>();
             var listaTipoBem = new List<TipoBem>();
 
@@ -383,15 +392,16 @@ namespace LeitorCSV
                     }
                 }
             }
-
+            Console.WriteLine("Leitura do dados de bens finalizada.");
             return listaBens;
         }
 
         private static List<VagasCandidato> LeituraVagas(List<Estado> estados, List<Municipio> municipios)
         {
-            //var arquivos = ObterArquivos(@"C:\Users\solpe\Desktop\LDB\consulta_vagas_2020");
-            var arquivos = ObterArquivos(@"C:\BackupStela\STELA\Projetos\TrabalhoLabBDEleicoes\Arquivos\consulta_vagas_2020");
+            var arquivos = ObterArquivos(@"C:\Users\solpe\Desktop\LDB\consulta_vagas_2020");
+            //var arquivos = ObterArquivos(@"C:\BackupStela\STELA\Projetos\TrabalhoLabBDEleicoes\Arquivos\consulta_vagas_2020");
 
+            Console.WriteLine("Iniciando leitura do dados de vagas.");
             var listaCargos = new List<Cargo>();
             var listaVagas = new List<VagasCandidato>();
 
@@ -461,13 +471,16 @@ namespace LeitorCSV
                 }
             }
 
+            Console.WriteLine("\n Finalizado a leitura do dados de vagas.");
             return listaVagas;
         }
 
         private static List<Coligacao> LeituraColigacao(List<Estado> estados, List<Municipio> municipios)
         {
-            //var arquivos = ObterArquivos(@"C:\Users\solpe\Desktop\LDB\consulta_coligacao_2020");
-            var arquivos = ObterArquivos(@"C:\BackupStela\STELA\Projetos\TrabalhoLabBDEleicoes\Arquivos\consulta_coligacao_2020");
+            var arquivos = ObterArquivos(@"C:\Users\solpe\Desktop\LDB\consulta_coligacao_2020");
+            //var arquivos = ObterArquivos(@"C:\BackupStela\STELA\Projetos\TrabalhoLabBDEleicoes\Arquivos\consulta_coligacao_2020");
+
+            Console.WriteLine("Iniciando leitura do dados de coligacao.");
 
             var listaCargos = new List<Cargo>();
             var listaColigacao = new List<Coligacao>();
@@ -552,13 +565,17 @@ namespace LeitorCSV
                     }
                 }
             }
+
+            Console.WriteLine("Finalizando leitura do dados de coligacao.");
             return listaColigacao;
         }
 
         private static List<Cassacao> LeituraCassacao(List<Estado> estados, List<Municipio> municipios)
         {
-            //var arquivos = ObterArquivos(@"C:\Users\solpe\Desktop\LDB\motivo_cassacao_2020");
-            var arquivos = ObterArquivos(@"C:\BackupStela\STELA\Projetos\TrabalhoLabBDEleicoes\Arquivos\motivo_cassacao_2020");
+            var arquivos = ObterArquivos(@"C:\Users\solpe\Desktop\LDB\motivo_cassacao_2020");
+            //var arquivos = ObterArquivos(@"C:\BackupStela\STELA\Projetos\TrabalhoLabBDEleicoes\Arquivos\motivo_cassacao_2020");
+
+            Console.WriteLine("Iniciando leitura do dados de cassacao.");
 
             var listaCasssacao = new List<Cassacao>();
             
@@ -614,9 +631,152 @@ namespace LeitorCSV
                 }
             }
 
+            Console.WriteLine("Finalizando leitura dos dados de cassacao.");
             return listaCasssacao;
         }
 
+        private static void SalvarDadosVagas(List<VagasCandidato> vagasCandidatos)
+        {
+            string connStr = "User ID=postgres;Password=123;Host=localhost;Port=5432;Database=Trabalho;Pooling=true;";
+            var m_conn = new NpgsqlConnection(connStr);
+
+            Console.WriteLine("\nInicio da inserção de dados de vagas.");
+
+            foreach (var vaga in vagasCandidatos)
+            {
+                string sqlInsert = @$"INSERT INTO  vagasCandidato (                             
+                            id, 
+                            dataPosse, 
+                            dataEleicao, 
+                            qtdeVagas, 
+                            estadoID, 
+                            municipioID, 
+                            CargoID) 
+                         VALUES ({vaga.Id}, '{vaga.DataPosse}', '{vaga.DataEleicao}', '{vaga.QtdeVagas}', '{vaga.EstadoID}', '{vaga.MunicipioId}', 
+                                    '{vaga.CargoID}')";
+
+                m_conn.Open();
+                var m_createdb_cmd = new NpgsqlCommand(sqlInsert, m_conn);
+
+                m_createdb_cmd.ExecuteNonQuery();
+                m_conn.Close();
+            }
+
+            Console.WriteLine("\nFim da inserção de dados das vagas.");
+        }
+
+        private static void SalvarDadosCassacao(List<Cassacao> dadosCassacao)
+        {
+            string connStr = "User ID=postgres;Password=123;Host=localhost;Port=5432;Database=Trabalho;Pooling=true;";
+            var m_conn = new NpgsqlConnection(connStr);
+
+            Console.WriteLine("\nInicio da inserção de dados de cassacao.");
+
+            foreach (var dado in dadosCassacao)
+            {
+                string sqlInsert = @$"INSERT INTO  cassacao(                             
+                            id, 
+                            motivo, 
+                            candidatoId, 
+                            estadoID,  
+                            municipioID) 
+                         VALUES ({dado.Id}, '{dado.Motivo}', '{dado.CandidatoID}', '{dado.EstadoID}', '{dado.MunicipioId}')";
+
+                m_conn.Open();
+                var m_createdb_cmd = new NpgsqlCommand(sqlInsert, m_conn);
+
+                m_createdb_cmd.ExecuteNonQuery();
+                m_conn.Close();
+            }
+
+            Console.WriteLine("\nFim da inserção de dados de Cassacao.");
+        }
+
+        private static void SalvarDadosColigacao(List<Coligacao> dadosColigacao)
+        {
+            string connStr = "User ID=postgres;Password=123;Host=localhost;Port=5432;Database=Trabalho;Pooling=true;";
+            var m_conn = new NpgsqlConnection(connStr);
+
+            Console.WriteLine("\nInicio da inserção de dados de coligacao.");
+
+            foreach (var dado in dadosColigacao)
+            {
+                string sqlInsert = @$"INSERT INTO  coligacao(                             
+                            id, 
+                            nome,
+                            composicao,
+                            situacao,
+                            agremiacao,
+                            cargoID, 
+                            partidoID,
+                            estadoID,  
+                            municipioID) 
+                         VALUES ({dado.Id}, '{dado.Nome}', '{dado.Composicao}', '{dado.SituacaoLegenda}', '{dado.Agremiacao}','{dado.CargoID}',
+                                  '{dado.EstadoId}','{dado.MunicipioId}')";
+
+                m_conn.Open();
+                var m_createdb_cmd = new NpgsqlCommand(sqlInsert, m_conn);
+
+                m_createdb_cmd.ExecuteNonQuery();
+                m_conn.Close();
+            }
+
+            Console.WriteLine("\nFim da inserção de dados de Cassacao.");
+        }
+
+        private static void SalvarDadosEstado(List<Estado> estados)
+        {
+            string connStr = "User ID=postgres;Password=123;Host=localhost;Port=5432;Database=Trabalho;Pooling=true;";
+            var m_conn = new NpgsqlConnection(connStr);
+
+            Console.WriteLine("\nInicio da inserção de dados de estados.");
+
+            foreach (var estado in estados)
+            {
+                string sqlInsert = @$"INSERT INTO  coligacao(                             
+                            id, 
+                            sigla) 
+                         VALUES ({estado.Id}, '{estado.Sigla}')";
+
+                m_conn.Open();
+                var m_createdb_cmd = new NpgsqlCommand(sqlInsert, m_conn);
+
+                m_createdb_cmd.ExecuteNonQuery();
+                m_conn.Close();
+            }
+
+            Console.WriteLine("\nFim da inserção de dados de estados.");
+        }
+
+        private static void SalvarDadosMunicipio(List<Municipio> municipios)
+        {
+            string connStr = "User ID=postgres;Password=123;Host=localhost;Port=5432;Database=Trabalho;Pooling=true;";
+            var m_conn = new NpgsqlConnection(connStr);
+
+            Console.WriteLine("\nInicio da inserção de dados de Municipios.");
+
+            foreach (var municipio in municipios)
+            {
+                string sqlInsert = @$"INSERT INTO  municipios(                             
+                            id, 
+                            nome,
+                            estadoid) 
+                         VALUES ({municipio.Id}, '{municipio.Nome}', '{municipio.EstadoID}')";
+
+                m_conn.Open();
+                var m_createdb_cmd = new NpgsqlCommand(sqlInsert, m_conn);
+
+                m_createdb_cmd.ExecuteNonQuery();
+                m_conn.Close();
+            }
+
+            Console.WriteLine("\nFim da inserção de dados de Municipios.");
+        }
+
+        private static void SalvarDadosCargo()
+        {
+
+        }
         private static string RegexString(string strIn)
         {
             // Replace invalid characters with empty strings.
